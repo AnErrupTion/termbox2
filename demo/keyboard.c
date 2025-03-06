@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <locale.h>
 #include "../termbox2.h"
 
 struct key {
@@ -694,6 +695,8 @@ int main(int argc, char **argv)
     (void) argc; (void) argv;
     int ret;
 
+    setlocale(LC_ALL, "");
+
     ret = tb_init();
     if (ret) {
         fprintf(stderr, "tb_init() failed with error code %d\n", ret);
@@ -709,7 +712,18 @@ int main(int argc, char **argv)
     int inputmode = 0;
     int ctrlxpressed = 0;
 
-    while (tb_poll_event(&ev) == TB_OK) {
+    while (1) {
+        ret = tb_poll_event(&ev);
+
+        if (ret != TB_OK) {
+            if (ret == TB_ERR_POLL && tb_last_errno() == EINTR) {
+                /* poll was interrupted, maybe by a SIGWINCH; try again */
+                continue;
+            }
+            /* some other error occurred; bail */
+            break;
+        }
+
         switch (ev.type) {
         case TB_EVENT_KEY:
             if (ev.key == TB_KEY_CTRL_Q && ctrlxpressed) {

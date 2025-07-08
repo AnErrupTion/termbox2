@@ -80,7 +80,9 @@ As mentioned above, there are two options:
 1. Copy (or `git submodule`) `termbox2.h` into your C project. As normal,
    include the header file wherever you want to use `tb_*` functions, but also
    be sure to `#define TB_IMPL` in exactly one of your source files. (This is a
-   common pattern for single file header libraries.)
+   common pattern for single file header libraries.) Ensure that feature test
+   macros `_DEFAULT_SOURCE` and `_XOPEN_SOURCE` are defined (either by defining
+   them via compiler flags or including `termbox2.h` first[^1]).
 2. Build termbox2 as a library (either `make libtermbox2.so` or
    `make libtermbox2.a`) and link as normal. Make sure the compile-time options
    remain the same for libtermbox2 and your application. (Alternatively, build
@@ -109,11 +111,14 @@ Other wrapper libraries:
 * [Termbox.pm (Perl)](https://github.com/sanko/Termbox.pm)
 * [termbox2-hs (Haskell)](https://github.com/gatlin/termbox2-hs)
 * [termbox2-zig (Zig)](https://sr.ht/~kolunmi/termbox2-zig)
+* [termbox2-node (JavaScript)](https://github.com/RauliL/termbox2-node)
 * [letloop's termbox2 (Chez Scheme)](https://github.com/letloop/letloop/)
+* [odin-termbox2 (Odin)](https://github.com/sudokit/odin-termbox2)
 
 ### Examples
 
 * [mle](https://github.com/adsr/mle) - flexible terminal-based text editor
+* [newsraft](https://codeberg.org/newsraft/newsraft) - feed reader for terminal
 * [ictree](https://github.com/NikitaIvanovV/ictree) - like tree but interactive
 * [lavat](https://github.com/AngelJumbo/lavat) - lava lamp for the terminal
 * [termbox-tetris](https://github.com/zacharygraber/termbox-tetris) - Tetris clone
@@ -121,3 +126,6 @@ Other wrapper libraries:
 * [matrix-tui](https://github.com/git-bruh/matrix-tui) - Matrix client
 * [Vgmi](https://github.com/RealMelkor/Vgmi) - Gemini client
 * [poe](https://sr.ht/~strahinja/poe/) - `.po` file editor
+* [xtxf](https://github.com/charlesrocket/xtxf) - 2D matrix screensaver
+
+[^1]: See https://github.com/termbox/termbox2/pull/75#issuecomment-2252242269

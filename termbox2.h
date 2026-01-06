@@ -3285,14 +3285,20 @@ static int load_terminfo_from_path(const char *path, const char *term) {
 static int read_terminfo_path(const char *path) {
     FILE *fp = fopen(path, "rb");
     if (!fp) return TB_ERR;
+  
+    // using fstat currently results in this function becoming untranslateable by zig
+    // see: https://codeberg.org/fairyglade/ly/issues/760
+    // struct stat st;
+    // if (fstat(fileno(fp), &st) != 0) {
+    //     fclose(fp);
+    //     return TB_ERR;
+    // }
 
-    struct stat st;
-    if (fstat(fileno(fp), &st) != 0) {
-        fclose(fp);
-        return TB_ERR;
-    }
-
-    size_t fsize = st.st_size;
+    // instead, imitate fstat using fseek and ftell
+    fseek(fp, 0, SEEK_END);
+    size_t fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+  
     char *data = (char *)tb_malloc(fsize);
     if (!data) {
         fclose(fp);

@@ -3128,7 +3128,7 @@ static int update_term_size_via_esc(void) {
     }
 
     fd_set fds;
-    FD_ZERO(&fds);
+    memset(&fds, 0, sizeof(fd_set));
     FD_SET(global.rfd, &fds);
 
     struct timeval timeout;
@@ -3463,7 +3463,7 @@ static int wait_event(struct tb_event *event, int timeout) {
     tv.tv_usec = (timeout - (tv.tv_sec * 1000)) * 1000;
 
     do {
-        FD_ZERO(&fds);
+        memset(&fds, 0, sizeof(fd_set));
         FD_SET(global.rfd, &fds);
         FD_SET(global.resize_pipefd[0], &fds);
 
